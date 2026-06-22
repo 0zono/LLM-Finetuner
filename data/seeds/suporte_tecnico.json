@@ -1,0 +1,53 @@
+[
+  {
+    "text": "Abra um chamado para o usuário 102 informando erro de login.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 102,
+      "categoria": "login",
+      "descricao": "Erro de login",
+      "prioridade": "media"
+    }
+  },
+  {
+    "text": "Consulte o status do chamado 4587.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 4587
+    }
+  },
+  {
+    "text": "Altere o chamado 4587 para resolvido.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 4587,
+      "status": "resolvido"
+    }
+  },
+  {
+    "text": "Liste as permissões do usuário maria.souza@empresa.com.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "email": "maria.souza@empresa.com"
+    }
+  },
+  {
+    "text": "Consulte os dados do usuário joao.silva@empresa.com.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "email": "joao.silva@empresa.com"
+    }
+  },
+  {
+    "text": "Qual é o horário de atendimento do suporte?",
+    "output": "O suporte técnico funciona em horário comercial."
+  },
+  {
+    "text": "Obrigado pela ajuda!",
+    "output": "Disponha! Se precisar de mais alguma coisa, estou à disposição."
+  },
+  {
+    "text": "Explique quais tipos de problema o suporte atende.",
+    "output": "O suporte atende problemas de acesso, login, hardware, software e rede."
+  }
+]

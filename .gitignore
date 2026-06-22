@@ -1,0 +1,69 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments and packaging
+venv/
+.venv/
+env/
+.env/
+*.egg-info/
+build/
+dist/
+
+# Secrets and machine-local configuration
+.env*
+!.env.example
+config.local.yaml
+config.local.yml
+*.local.yaml
+*.local.yml
+
+# Runtime caches, logs and temporary files
+.cache/
+cache/
+tmp/
+temp/
+*.log
+*.tmp
+*.bak
+
+# Generated datasets, reports and experiment artifacts
+data/output/
+reports/
+runs/
+artifacts/
+checkpoints/
+models/
+wandb/
+lightning_logs/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local AI-assistant metadata
+.codex/
+.claude/
+.cursor/
+.aider*
+AGENTS.md
+CLAUDE.md
+GEMINI.md
