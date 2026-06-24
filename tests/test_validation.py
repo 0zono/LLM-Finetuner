@@ -1,8 +1,12 @@
 from copy import deepcopy
 
 from src.core.models import CanonicalRecord, TaskType
+from src.core.tool_registry import ToolRegistry
 from src.formatting.chat_formatter import format_records
 from src.validation.schema_validator import validate_records
+
+
+REGISTRY = ToolRegistry.from_file("domains/suporte_tecnico/tools.json")
 
 
 def tool_record(**overrides) -> CanonicalRecord:
@@ -22,7 +26,7 @@ def tool_record(**overrides) -> CanonicalRecord:
 
 def test_valid_tool_call() -> None:
     formatted, rejected = format_records([tool_record()], "Sistema")
-    valid, invalid = validate_records(formatted)
+    valid, invalid = validate_records(formatted, REGISTRY)
     assert len(valid) == 1
     assert rejected == []
     assert invalid == []
@@ -31,7 +35,7 @@ def test_valid_tool_call() -> None:
 def test_unknown_tool_is_rejected() -> None:
     record = tool_record(tool="nao_existe")
     formatted, _ = format_records([record], "Sistema")
-    valid, invalid = validate_records(formatted)
+    valid, invalid = validate_records(formatted, REGISTRY)
     assert valid == []
     assert invalid[0].errors[-1].code == "UNKNOWN_TOOL"
 
@@ -39,7 +43,7 @@ def test_unknown_tool_is_rejected() -> None:
 def test_extra_argument_is_rejected() -> None:
     record = tool_record(arguments={"email": "joao@example.com", "extra": True})
     formatted, _ = format_records([record], "Sistema")
-    valid, invalid = validate_records(formatted)
+    valid, invalid = validate_records(formatted, REGISTRY)
     assert valid == []
     assert invalid[0].errors[-1].code == "EXTRA_FIELD"
 
@@ -47,7 +51,7 @@ def test_extra_argument_is_rejected() -> None:
 def test_exactly_one_user_identifier() -> None:
     record = tool_record(arguments={"email": "joao@example.com", "usuario_id": 1})
     formatted, _ = format_records([record], "Sistema")
-    valid, invalid = validate_records(formatted)
+    valid, invalid = validate_records(formatted, REGISTRY)
     assert valid == []
     assert invalid
 
@@ -63,7 +67,7 @@ def test_instruction_following() -> None:
         expected_output="Resumo esperado.",
     )
     formatted, rejected = format_records([record], "Sistema")
-    valid, invalid = validate_records(formatted)
+    valid, invalid = validate_records(formatted, REGISTRY)
     assert rejected == []
     assert len(valid) == 1
     assert invalid == []
@@ -91,7 +95,7 @@ def test_tool_calling_allows_intent_without_tool() -> None:
         expected_output="O suporte funciona em horário comercial.",
     )
     formatted, rejected = format_records([record], "Sistema")
-    valid, invalid = validate_records(formatted)
+    valid, invalid = validate_records(formatted, REGISTRY)
     assert rejected == []
     assert len(valid) == 1
     assert invalid == []

@@ -1,6 +1,6 @@
 [
   {
-    "text": "Abra um chamado para o usuário 102 informando erro de login.",
+    "text": "Abra um chamado de prioridade média para o usuário 102, informando erro de login.",
     "tool": "abrir_chamado",
     "arguments": {
       "usuario_id": 102,

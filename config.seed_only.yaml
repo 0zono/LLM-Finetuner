@@ -1,11 +1,14 @@
 task_type: tool_calling
-seed_path: data/seeds/suporte_tecnico.json
-output_dir: data/output/latest
-reports_dir: reports/latest
+domain: suporte_tecnico
+tools_file: domains/suporte_tecnico/tools.json
+seed_path: data/seeds/suporte_tecnico_experimento.json
+
+output_dir: data/output/seed_only
+reports_dir: reports/seed_only
 
 enable_generation: false
-variations_per_seed: 2
-enable_curation: true
+variations_per_seed: 0
+enable_curation: false
 curation_mode: heuristic
 minimum_curation_score: 0.7
 enable_evaluation: true
@@ -15,17 +18,16 @@ system_prompt: >-
   Quando necessário, converta a solicitação em uma chamada estruturada.
 
 splits:
-  train: 0.8
-  validation: 0.1
-  test: 0.1
+  train: 0.7
+  validation: 0.15
+  test: 0.15
   seed: 42
 
 llm:
   enabled: false
   base_url: http://localhost:1234/v1
-  model: local-model
-  api_key_env: LOCAL_LLM_API_KEY
+  model: qwen/qwen3-14b@q4_k_m
   temperature: 0.2
-  timeout_seconds: 120
+  timeout_seconds: 999
   max_retries: 3
   cache_dir: .cache/llm

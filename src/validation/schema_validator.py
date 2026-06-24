@@ -12,11 +12,12 @@ from src.core.models import (
     RecordStatus,
     TaskType,
 )
-from src.core.tool_registry import validate_tool_arguments
+from src.core.tool_registry import ToolArgumentsError, ToolRegistry
 
 
 def validate_records(
     records: list[CanonicalRecord],
+    tool_registry: ToolRegistry | None = None,
 ) -> tuple[list[CanonicalRecord], list[CanonicalRecord]]:
     valid: list[CanonicalRecord] = []
     invalid: list[CanonicalRecord] = []
@@ -33,7 +34,9 @@ def validate_records(
             else:
                 example = ChatExample.model_validate(record.payload)
                 if record.task_type == TaskType.TOOL_CALLING:
-                    _validate_tool_calling(record, example)
+                    if tool_registry is None:
+                        raise ValueError("validação de tool calling exige um registro de ferramentas")
+                    _validate_tool_calling(record, example, tool_registry)
             record.status = RecordStatus.VALID
             record.meta["valid"] = True
             record.add_event("validation", "approved")
@@ -43,6 +46,15 @@ def validate_records(
                 "validation",
                 "UNKNOWN_TOOL",
                 f"Ferramenta desconhecida: {error.args[0]}",
+            )
+            invalid.append(record)
+        except ToolArgumentsError as error:
+            code = classify_tool_error(error)
+            record.add_error(
+                "validation",
+                code,
+                str(error),
+                {"tool": error.tool_name, "schema_errors": error.errors},
             )
             invalid.append(record)
         except (ValidationError, ValueError, TypeError) as error:
@@ -57,7 +69,11 @@ def validate_records(
     return valid, invalid
 
 
-def _validate_tool_calling(record: CanonicalRecord, example: ChatExample) -> None:
+def _validate_tool_calling(
+    record: CanonicalRecord,
+    example: ChatExample,
+    tool_registry: ToolRegistry,
+) -> None:
     calls = [
         call
         for message in example.messages
@@ -73,11 +89,28 @@ def _validate_tool_calling(record: CanonicalRecord, example: ChatExample) -> Non
     if len(calls) != 1:
         raise ValueError("o exemplo deve conter exatamente uma chamada de ferramenta")
     call = calls[0]
-    validated = validate_tool_arguments(call.name, call.arguments)
+    validated = tool_registry.validate_arguments(call.name, call.arguments)
     if record.tool and call.name != record.tool:
         raise ValueError("ferramenta no payload diverge da anotação canônica")
     if record.arguments and validated != record.arguments:
         raise ValueError("argumentos no payload divergem da anotação canônica")
+
+
+def classify_tool_error(error: ToolArgumentsError) -> str:
+    validators = {item.get("validator") for item in error.errors}
+    if "additionalProperties" in validators:
+        return "EXTRA_FIELD"
+    if "required" in validators:
+        return "MISSING_FIELD"
+    if "type" in validators:
+        return "INVALID_TYPE"
+    if "enum" in validators:
+        return "INVALID_ENUM"
+    if "oneOf" in validators or "anyOf" in validators:
+        return "INVALID_ALTERNATIVE"
+    if "format" in validators or "pattern" in validators:
+        return "INVALID_FORMAT"
+    return "INVALID_ARGUMENT_VALUE"
 
 
 def classify_validation_error(error: Exception) -> str:

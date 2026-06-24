@@ -4,8 +4,7 @@ import os
 from pathlib import Path
 from typing import Literal
 
-import yaml
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.core.models import TaskType
 
@@ -37,7 +36,9 @@ class SplitConfig(BaseModel):
 class PipelineConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     task_type: TaskType = TaskType.TOOL_CALLING
-    seed_path: str = "data/seeds/suporte_tecnico.json"
+    domain: str = "generic"
+    tools_file: str | None = None
+    seed_path: str = "data/seeds/examples.json"
     output_dir: str = "data/output/latest"
     reports_dir: str = "reports/latest"
     enable_generation: bool = False
@@ -46,15 +47,20 @@ class PipelineConfig(BaseModel):
     enable_evaluation: bool = True
     curation_mode: Literal["heuristic", "llm"] = "heuristic"
     minimum_curation_score: float = Field(default=0.7, ge=0, le=1)
-    system_prompt: str = (
-        "Você é um agente responsável por operar ferramentas de suporte técnico. "
-        "Quando necessário, converta a solicitação em uma chamada estruturada."
-    )
+    system_prompt: str = "Você é um assistente que pode operar as ferramentas fornecidas."
     splits: SplitConfig = Field(default_factory=SplitConfig)
     llm: LLMConfig = Field(default_factory=LLMConfig)
 
+    @model_validator(mode="after")
+    def validate_domain_configuration(self) -> "PipelineConfig":
+        if self.task_type == TaskType.TOOL_CALLING and not self.tools_file:
+            raise ValueError("task_type tool_calling exige tools_file")
+        return self
+
     @classmethod
     def from_yaml(cls, path: str | Path) -> "PipelineConfig":
+        import yaml
+
         path = Path(path)
         if not path.exists():
             raise FileNotFoundError(f"Configuração não encontrada: {path}")

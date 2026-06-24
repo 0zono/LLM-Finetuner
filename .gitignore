@@ -19,6 +19,8 @@ env/
 *.egg-info/
 build/
 dist/
+venv-training
+.venv-training/
 
 # Secrets and machine-local configuration
 .env*
@@ -39,6 +41,7 @@ temp/
 
 # Generated datasets, reports and experiment artifacts
 data/output/
+output/
 reports/
 runs/
 artifacts/

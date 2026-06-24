@@ -17,6 +17,21 @@ from src.core.models import CanonicalRecord
 def split_by_parent(
     records: list[CanonicalRecord], config: PipelineConfig
 ) -> dict[str, list[CanonicalRecord]]:
+    if records and all(record.meta.get("split") for record in records):
+        splits = {"train": [], "validation": [], "test": []}
+        parent_splits: dict[str, str] = {}
+        for record in records:
+            split = str(record.meta["split"])
+            if split not in splits:
+                raise ValueError(f"Split desconhecido no registro {record.id}: {split}")
+            previous = parent_splits.setdefault(record.parent_seed_id, split)
+            if previous != split:
+                raise ValueError(
+                    f"Vazamento: parent_seed_id {record.parent_seed_id} aparece em mais de um split"
+                )
+            splits[split].append(record)
+        return splits
+
     config.validate_split_sum()
     groups: dict[str, list[CanonicalRecord]] = defaultdict(list)
     for record in records:
@@ -52,6 +67,60 @@ def split_by_parent(
         name: [record for key in parent_ids for record in groups[key]]
         for name, parent_ids in partitions.items()
     }
+
+
+def assign_seed_splits(
+    records: list[CanonicalRecord], config: PipelineConfig
+) -> dict[str, list[CanonicalRecord]]:
+    """Atribui splits antes do aumento, estratificando pela ferramenta/intenção."""
+    config.validate_split_sum()
+    grouped: dict[str, list[CanonicalRecord]] = defaultdict(list)
+    for record in records:
+        grouped[record.tool or "__no_tool__"].append(record)
+
+    splits = {"train": [], "validation": [], "test": []}
+    proportions = {
+        "train": config.splits.train,
+        "validation": config.splits.validation,
+        "test": config.splits.test,
+    }
+    for label in sorted(grouped):
+        label_records = sorted(grouped[label], key=lambda item: item.id)
+        label_seed = int(hashlib.sha256(label.encode("utf-8")).hexdigest()[:8], 16)
+        random.Random(config.splits.seed + label_seed).shuffle(label_records)
+        counts = _allocate_split_counts(len(label_records), proportions)
+        offset = 0
+        for split in ("train", "validation", "test"):
+            selected = label_records[offset : offset + counts[split]]
+            offset += counts[split]
+            for record in selected:
+                record.meta["split"] = split
+                record.add_event("splitting", "assigned", {"split": split, "stratum": label})
+            splits[split].extend(selected)
+    return splits
+
+
+def _allocate_split_counts(
+    total: int, proportions: dict[str, float]
+) -> dict[str, int]:
+    counts = {name: 0 for name in proportions}
+    active = [name for name, value in proportions.items() if value > 0]
+    if total >= len(active):
+        for name in active:
+            counts[name] = 1
+    else:
+        priority = sorted(active, key=lambda name: (-proportions[name], name))
+        for name in priority[:total]:
+            counts[name] = 1
+
+    remaining = total - sum(counts.values())
+    for _ in range(remaining):
+        chosen = max(
+            active,
+            key=lambda name: (proportions[name] * total - counts[name], proportions[name]),
+        )
+        counts[chosen] += 1
+    return counts
 
 
 def export_run(

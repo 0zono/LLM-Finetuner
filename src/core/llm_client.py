@@ -18,7 +18,12 @@ class LocalLLMClient:
         self.config = config
         self.cache_dir = Path(config.cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
-        self.usage = {"requests": 0, "prompt_tokens": 0, "completion_tokens": 0}
+        self.usage = {
+            "requests": 0,
+            "cache_hits": 0,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+        }
 
     def chat_json(
         self,
@@ -44,6 +49,7 @@ class LocalLLMClient:
         ).hexdigest()
         cache_path = self.cache_dir / f"{key}.json"
         if cache_path.exists():
+            self.usage["cache_hits"] += 1
             return json.loads(cache_path.read_text(encoding="utf-8"))["parsed"]
 
         raw = self._request(payload)

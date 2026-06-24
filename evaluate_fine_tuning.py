@@ -8,6 +8,7 @@ from typing import Any
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Avalia modelo base ou adaptador LoRA")
+    parser.add_argument("--config", default="config.yaml", help="Configuração do domínio")
     parser.add_argument("--model", required=True)
     parser.add_argument("--adapter")
     parser.add_argument("--test", default="data/output/latest/test.jsonl")
@@ -24,7 +25,12 @@ def main() -> int:
         ) from error
 
     from fine_tune import normalize_tool_calls
-    from src.core.tool_registry import tool_schemas
+    from src.core.config import PipelineConfig
+    from src.core.tool_registry import ToolRegistry
+
+    pipeline_config = PipelineConfig.from_yaml(args.config)
+    registry = ToolRegistry.from_file(pipeline_config.tools_file) if pipeline_config.tools_file else None
+    tools = registry.as_openai_tools() if registry else []
 
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     model = AutoModelForCausalLM.from_pretrained(args.model, device_map="auto")
@@ -43,7 +49,7 @@ def main() -> int:
         expected = extract_expected(messages[-1])
         prompt = tokenizer.apply_chat_template(
             messages[:-1],
-            tools=tool_schemas(),
+            tools=tools,
             tokenize=False,
             add_generation_prompt=True,
         )

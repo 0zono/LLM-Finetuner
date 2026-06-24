@@ -5,8 +5,10 @@ from typing import Any, Callable
 
 from src.core.config import PipelineConfig
 from src.core.llm_client import LocalLLMClient
+from src.core.models import TaskType
+from src.core.tool_registry import ToolRegistry
 from src.curation.llm_judge import curate_records
-from src.export.jsonl_exporter import export_run
+from src.export.jsonl_exporter import assign_seed_splits, export_run
 from src.formatting.chat_formatter import format_records
 from src.generation.llm_generator import generate_examples
 from src.ingestion.seed_loader import load_seed_records
@@ -18,6 +20,16 @@ from src.validation.evaluator import evaluate_validator
 class PipelineOrchestrator:
     def __init__(self, config: PipelineConfig) -> None:
         self.config = config
+        self.tool_registry = (
+            ToolRegistry.from_file(config.tools_file)
+            if config.task_type == TaskType.TOOL_CALLING and config.tools_file
+            else None
+        )
+        if self.tool_registry and self.tool_registry.domain != config.domain:
+            raise ValueError(
+                "O domínio do config não corresponde ao domínio do registro de ferramentas: "
+                f"{config.domain} != {self.tool_registry.domain}"
+            )
         needs_llm = config.enable_generation or (
             config.enable_curation and config.curation_mode == "llm"
         )
@@ -49,25 +61,54 @@ class PipelineOrchestrator:
             input=len(records), output=len(cleaned), rejected=len(rejected_cleaning)
         )
 
-        generated, rejected_generation = self._measure(
+        seed_splits = self._measure(
+            "splitting", lambda: assign_seed_splits(cleaned, self.config)
+        )
+        self.stats["splitting"].update(
+            train=len(seed_splits["train"]),
+            validation=len(seed_splits["validation"]),
+            test=len(seed_splits["test"]),
+        )
+
+        augmented_train, rejected_generation = self._measure(
             "generation",
             lambda: generate_examples(
-                cleaned,
+                seed_splits["train"],
                 enabled=self.config.enable_generation,
                 variations_per_seed=self.config.variations_per_seed,
                 client=self.client,
             ),
         )
+        train_variations = [
+            record for record in augmented_train if record.meta.get("generated")
+        ]
+        combined = cleaned + train_variations
         self.stats["generation"].update(
-            input=len(cleaned), output=len(generated), rejected=len(rejected_generation)
+            input=len(seed_splits["train"]),
+            added=len(train_variations),
+            output=len(combined),
+            rejected=len(rejected_generation),
         )
+
+        prepared, rejected_post_generation = self._measure(
+            "post_generation_cleaning", lambda: clean_records(combined)
+        )
+        self.stats["post_generation_cleaning"].update(
+            input=len(combined),
+            output=len(prepared),
+            rejected=len(rejected_post_generation),
+        )
+        prepared_variations = sum(
+            bool(record.meta.get("generated")) for record in prepared
+        )
+        self.stats["generation"]["accepted_variations"] = prepared_variations
 
         formatted, rejected_formatting = self._measure(
             "formatting",
-            lambda: format_records(generated, self.config.system_prompt),
+            lambda: format_records(prepared, self.config.system_prompt),
         )
         self.stats["formatting"].update(
-            input=len(generated), output=len(formatted), rejected=len(rejected_formatting)
+            input=len(prepared), output=len(formatted), rejected=len(rejected_formatting)
         )
 
         curated, rejected_curation = self._measure(
@@ -85,7 +126,7 @@ class PipelineOrchestrator:
         )
 
         valid, rejected_validation = self._measure(
-            "validation", lambda: validate_records(curated)
+            "validation", lambda: validate_records(curated, self.tool_registry)
         )
         self.stats["validation"].update(
             input=len(curated), output=len(valid), rejected=len(rejected_validation)
@@ -96,7 +137,9 @@ class PipelineOrchestrator:
             evaluation = self._measure(
                 "evaluation",
                 lambda: evaluate_validator(
-                    valid, f"{self.config.reports_dir}/validator_evaluation.json"
+                    valid,
+                    f"{self.config.reports_dir}/validator_evaluation.json",
+                    self.tool_registry,
                 ),
             )
             self.stats["evaluation"]["examples"] = evaluation["examples"]
@@ -104,6 +147,7 @@ class PipelineOrchestrator:
         invalid = (
             rejected_cleaning
             + rejected_generation
+            + rejected_post_generation
             + rejected_formatting
             + rejected_curation
             + rejected_validation
@@ -122,7 +166,8 @@ class PipelineOrchestrator:
         return {
             "total_records": len(records),
             "cleaned_records": len(cleaned),
-            "generated_records": len(generated),
+            "generated_records": len(prepared),
+            "generated_variations": prepared_variations,
             "formatted_records": len(formatted),
             "curated_records": len(curated),
             "valid_records": len(valid),

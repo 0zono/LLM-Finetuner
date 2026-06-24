@@ -7,6 +7,7 @@ from pathlib import Path
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Fine-tuning LoRA/QLoRA da prova de utilidade")
+    parser.add_argument("--config", default="config.yaml", help="Configuração do domínio")
     parser.add_argument("--model", required=True, help="Modelo local ou identificador Hugging Face")
     parser.add_argument("--train", default="data/output/latest/train.jsonl")
     parser.add_argument("--validation", default="data/output/latest/validation.jsonl")
@@ -27,6 +28,13 @@ def main() -> int:
             "Instale as dependências opcionais: pip install -e \".[training]\""
         ) from error
 
+    from src.core.config import PipelineConfig
+    from src.core.tool_registry import ToolRegistry
+
+    pipeline_config = PipelineConfig.from_yaml(args.config)
+    registry = ToolRegistry.from_file(pipeline_config.tools_file) if pipeline_config.tools_file else None
+    tools = registry.as_openai_tools() if registry else []
+
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -43,8 +51,8 @@ def main() -> int:
         quantization_config=quantization,
         device_map="auto",
     )
-    train_dataset = load_dataset(Path(args.train), tokenizer)
-    validation_dataset = load_dataset(Path(args.validation), tokenizer)
+    train_dataset = load_dataset(Path(args.train), tokenizer, tools)
+    validation_dataset = load_dataset(Path(args.validation), tokenizer, tools)
     peft_config = LoraConfig(
         r=16,
         lora_alpha=32,
@@ -81,9 +89,8 @@ def main() -> int:
     return 0
 
 
-def load_dataset(path: Path, tokenizer):
+def load_dataset(path: Path, tokenizer, tools):
     from datasets import Dataset
-    from src.core.tool_registry import tool_schemas
 
     rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line]
     rendered = []
@@ -92,7 +99,7 @@ def load_dataset(path: Path, tokenizer):
             messages = normalize_tool_calls(row["messages"])
             text = tokenizer.apply_chat_template(
                 messages,
-                tools=tool_schemas(),
+                tools=tools,
                 tokenize=False,
                 add_generation_prompt=False,
             )

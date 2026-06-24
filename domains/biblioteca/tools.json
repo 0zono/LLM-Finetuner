@@ -1,0 +1,62 @@
+{
+  "domain": "biblioteca",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "buscar_livro",
+      "description": "Busca livros por título, autor ou termo livre.",
+      "parameters": {
+        "type": "object",
+        "properties": {"consulta": {"type": "string", "minLength": 2}},
+        "required": ["consulta"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "consultar_disponibilidade",
+      "description": "Consulta a disponibilidade de um livro pelo ISBN.",
+      "parameters": {
+        "type": "object",
+        "properties": {"isbn": {"type": "string", "pattern": "^[0-9-]{10,17}$"}},
+        "required": ["isbn"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "reservar_livro",
+      "description": "Reserva um livro disponível para um usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "usuario_id": {"type": "integer", "minimum": 1},
+          "isbn": {"type": "string", "pattern": "^[0-9-]{10,17}$"}
+        },
+        "required": ["usuario_id", "isbn"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "renovar_emprestimo",
+      "description": "Renova um empréstimo ativo.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "usuario_id": {"type": "integer", "minimum": 1},
+          "emprestimo_id": {"type": "integer", "minimum": 1}
+        },
+        "required": ["usuario_id", "emprestimo_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "listar_emprestimos",
+      "description": "Lista os empréstimos de um usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {"usuario_id": {"type": "integer", "minimum": 1}},
+        "required": ["usuario_id"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

@@ -36,3 +36,4 @@ def test_openai_compatible_client_and_cache(tmp_path, monkeypatch) -> None:
     assert client.chat_json(messages) == {"ok": True}
     assert calls == [("http://local/v1/chat/completions", 120)]
     assert client.usage["requests"] == 1
+    assert client.usage["cache_hits"] == 1

@@ -1,0 +1,518 @@
+[
+  {
+    "text": "Consulte os dados do usuário 104.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "usuario_id": 104
+    }
+  },
+  {
+    "text": "Verifique as informações cadastrais do usuário 238.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "usuario_id": 238
+    }
+  },
+  {
+    "text": "Quero visualizar o cadastro do usuário de identificador 517.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "usuario_id": 517
+    }
+  },
+  {
+    "text": "Busque o usuário com ID 684.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "usuario_id": 684
+    }
+  },
+  {
+    "text": "Mostre os detalhes do usuário 902.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "usuario_id": 902
+    }
+  },
+  {
+    "text": "Poderia consultar o perfil do usuário número 1150?",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "usuario_id": 1150
+    }
+  },
+  {
+    "text": "Consulte os dados associados ao e-mail ana.lima@empresa.com.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "email": "ana.lima@empresa.com"
+    }
+  },
+  {
+    "text": "Verifique o usuário cujo e-mail é bruno.costa@empresa.com.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "email": "bruno.costa@empresa.com"
+    }
+  },
+  {
+    "text": "Preciso das informações de carla.rocha@empresa.com.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "email": "carla.rocha@empresa.com"
+    }
+  },
+  {
+    "text": "Localize o cadastro vinculado a diego.alves@empresa.com.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "email": "diego.alves@empresa.com"
+    }
+  },
+  {
+    "text": "Mostre o perfil da usuária elisa.martins@empresa.com.",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "email": "elisa.martins@empresa.com"
+    }
+  },
+  {
+    "text": "Quais são os dados do usuário felipe.santos@empresa.com?",
+    "tool": "consultar_usuario",
+    "arguments": {
+      "email": "felipe.santos@empresa.com"
+    }
+  },
+  {
+    "text": "Abra um chamado de prioridade média para o usuário 121, na categoria login, informando erro de credenciais inválidas.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 121,
+      "categoria": "login",
+      "descricao": "Erro de credenciais inválidas",
+      "prioridade": "media"
+    }
+  },
+  {
+    "text": "Crie um chamado de prioridade alta para o usuário 247, na categoria acesso, pois a conta está bloqueada.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 247,
+      "categoria": "acesso",
+      "descricao": "Conta bloqueada",
+      "prioridade": "alta"
+    }
+  },
+  {
+    "text": "Registre um chamado crítico de hardware para o usuário 358, relatando que o notebook não liga.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 358,
+      "categoria": "hardware",
+      "descricao": "Notebook não liga",
+      "prioridade": "critica"
+    }
+  },
+  {
+    "text": "Abra uma solicitação de prioridade baixa para o usuário 466, na categoria software, sobre falha ao atualizar o aplicativo.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 466,
+      "categoria": "software",
+      "descricao": "Falha ao atualizar o aplicativo",
+      "prioridade": "baixa"
+    }
+  },
+  {
+    "text": "Gere um chamado de rede com prioridade alta para o usuário 579, descrevendo conexão intermitente.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 579,
+      "categoria": "rede",
+      "descricao": "Conexão intermitente",
+      "prioridade": "alta"
+    }
+  },
+  {
+    "text": "Crie um chamado de prioridade média na categoria outro para o usuário 631, solicitando orientação sobre certificado digital.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 631,
+      "categoria": "outro",
+      "descricao": "Orientação sobre certificado digital",
+      "prioridade": "media"
+    }
+  },
+  {
+    "text": "Abra um chamado de login com prioridade baixa para o usuário 744, informando dificuldade para redefinir a senha.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 744,
+      "categoria": "login",
+      "descricao": "Dificuldade para redefinir a senha",
+      "prioridade": "baixa"
+    }
+  },
+  {
+    "text": "Registre um chamado crítico de acesso para o usuário 805, pois ele não consegue acessar o ambiente de produção.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 805,
+      "categoria": "acesso",
+      "descricao": "Sem acesso ao ambiente de produção",
+      "prioridade": "critica"
+    }
+  },
+  {
+    "text": "Abra um chamado de hardware com prioridade alta para o usuário 916, relatando que o monitor está sem imagem.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 916,
+      "categoria": "hardware",
+      "descricao": "Monitor sem imagem",
+      "prioridade": "alta"
+    }
+  },
+  {
+    "text": "Crie um chamado de software com prioridade média para o usuário 1027, informando que o sistema ERP fecha sozinho.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 1027,
+      "categoria": "software",
+      "descricao": "Sistema ERP fecha sozinho",
+      "prioridade": "media"
+    }
+  },
+  {
+    "text": "Registre um chamado crítico de rede para o usuário 1138, pois todo o setor está sem internet.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 1138,
+      "categoria": "rede",
+      "descricao": "Setor inteiro sem internet",
+      "prioridade": "critica"
+    }
+  },
+  {
+    "text": "Abra um chamado de prioridade baixa na categoria outro para o usuário 1249, solicitando ajuda com a configuração de um token físico.",
+    "tool": "abrir_chamado",
+    "arguments": {
+      "usuario_id": 1249,
+      "categoria": "outro",
+      "descricao": "Ajuda com a configuração de um token físico",
+      "prioridade": "baixa"
+    }
+  },
+  {
+    "text": "Consulte o chamado 2101.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 2101
+    }
+  },
+  {
+    "text": "Verifique o andamento do ticket 3274.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 3274
+    }
+  },
+  {
+    "text": "Qual é a situação atual do chamado 4388?",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 4388
+    }
+  },
+  {
+    "text": "Quero consultar os detalhes do chamado número 5420.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 5420
+    }
+  },
+  {
+    "text": "Mostre as informações do ticket de ID 6513.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 6513
+    }
+  },
+  {
+    "text": "Poderia verificar o progresso do chamado 7645?",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 7645
+    }
+  },
+  {
+    "text": "Informe o status do chamado 8732.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 8732
+    }
+  },
+  {
+    "text": "Como está o atendimento registrado no ticket 9846?",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 9846
+    }
+  },
+  {
+    "text": "Preciso consultar o chamado 10957.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 10957
+    }
+  },
+  {
+    "text": "Busque os dados do chamado de número 11608.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 11608
+    }
+  },
+  {
+    "text": "Há alguma atualização no chamado 12719?",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 12719
+    }
+  },
+  {
+    "text": "Consulte a situação do ticket 13824.",
+    "tool": "consultar_chamado",
+    "arguments": {
+      "chamado_id": 13824
+    }
+  },
+  {
+    "text": "Altere o chamado 3101 para aberto.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3101,
+      "status": "aberto"
+    }
+  },
+  {
+    "text": "Atualize o chamado 3212 para em andamento.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3212,
+      "status": "em_andamento"
+    }
+  },
+  {
+    "text": "Coloque o ticket 3323 como pendente.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3323,
+      "status": "pendente"
+    }
+  },
+  {
+    "text": "Marque o chamado 3434 como resolvido.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3434,
+      "status": "resolvido"
+    }
+  },
+  {
+    "text": "Mude o status do chamado 3545 para fechado.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3545,
+      "status": "fechado"
+    }
+  },
+  {
+    "text": "Defina o ticket 3656 como em andamento.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3656,
+      "status": "em_andamento"
+    }
+  },
+  {
+    "text": "Atualize a situação do chamado 3767 para resolvido.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3767,
+      "status": "resolvido"
+    }
+  },
+  {
+    "text": "Reabra o chamado 3878, alterando seu status para aberto.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3878,
+      "status": "aberto"
+    }
+  },
+  {
+    "text": "Passe o ticket 3989 para pendente.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 3989,
+      "status": "pendente"
+    }
+  },
+  {
+    "text": "Finalize o chamado 4090 com o status fechado.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 4090,
+      "status": "fechado"
+    }
+  },
+  {
+    "text": "Modifique o chamado 4102 para em andamento.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 4102,
+      "status": "em_andamento"
+    }
+  },
+  {
+    "text": "Registre o chamado 4213 como resolvido.",
+    "tool": "alterar_status_chamado",
+    "arguments": {
+      "chamado_id": 4213,
+      "status": "resolvido"
+    }
+  },
+  {
+    "text": "Liste as permissões do usuário 130.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "usuario_id": 130
+    }
+  },
+  {
+    "text": "Mostre os direitos de acesso do usuário 246.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "usuario_id": 246
+    }
+  },
+  {
+    "text": "Quais são as permissões concedidas ao usuário 359?",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "usuario_id": 359
+    }
+  },
+  {
+    "text": "Consulte os acessos disponíveis para o usuário 472.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "usuario_id": 472
+    }
+  },
+  {
+    "text": "Exiba os privilégios associados ao usuário de ID 586.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "usuario_id": 586
+    }
+  },
+  {
+    "text": "Poderia listar as permissões do usuário número 693?",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "usuario_id": 693
+    }
+  },
+  {
+    "text": "Liste as permissões vinculadas a gabriela.ferraz@empresa.com.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "email": "gabriela.ferraz@empresa.com"
+    }
+  },
+  {
+    "text": "Mostre os acessos concedidos a henrique.moraes@empresa.com.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "email": "henrique.moraes@empresa.com"
+    }
+  },
+  {
+    "text": "Quais autorizações estão associadas a isabela.nunes@empresa.com?",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "email": "isabela.nunes@empresa.com"
+    }
+  },
+  {
+    "text": "Consulte as permissões da conta joao.pires@empresa.com.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "email": "joao.pires@empresa.com"
+    }
+  },
+  {
+    "text": "Exiba os privilégios do usuário karina.dias@empresa.com.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "email": "karina.dias@empresa.com"
+    }
+  },
+  {
+    "text": "Preciso verificar os direitos de acesso de lucas.araujo@empresa.com.",
+    "tool": "listar_permissoes_usuario",
+    "arguments": {
+      "email": "lucas.araujo@empresa.com"
+    }
+  },
+  {
+    "text": "Olá, tudo bem?",
+    "output": "Olá! Tudo bem. Como posso ajudar?"
+  },
+  {
+    "text": "Obrigado pelo atendimento.",
+    "output": "Disponha! Se precisar de mais alguma coisa, estou à disposição."
+  },
+  {
+    "text": "Bom dia! Preciso de ajuda com o suporte.",
+    "output": "Bom dia! Como posso ajudar com o suporte técnico?"
+  },
+  {
+    "text": "Até mais, agradeço pela ajuda.",
+    "output": "Até mais! Foi um prazer ajudar."
+  },
+  {
+    "text": "Consulte meu chamado.",
+    "output": "Informe o identificador do chamado que deseja consultar."
+  },
+  {
+    "text": "Abra um chamado para mim.",
+    "output": "Informe o usuário, a categoria, a descrição e a prioridade do chamado."
+  },
+  {
+    "text": "Liste minhas permissões.",
+    "output": "Informe seu identificador de usuário ou e-mail para que eu possa consultar as permissões."
+  },
+  {
+    "text": "Altere o status do meu chamado.",
+    "output": "Informe o identificador do chamado e o novo status desejado."
+  },
+  {
+    "text": "Qual é a previsão do tempo para amanhã?",
+    "output": "Não possuo uma ferramenta disponível para consultar a previsão do tempo."
+  },
+  {
+    "text": "Quanto está a cotação do dólar hoje?",
+    "output": "Não possuo uma ferramenta disponível para consultar cotações financeiras."
+  },
+  {
+    "text": "Reserve uma mesa em um restaurante para esta noite.",
+    "output": "Não possuo uma ferramenta disponível para realizar reservas em restaurantes."
+  },
+  {
+    "text": "Marque uma consulta médica para a próxima semana.",
+    "output": "Não possuo uma ferramenta disponível para agendar consultas médicas."
+  }
+]

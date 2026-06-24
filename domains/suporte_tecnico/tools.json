@@ -1,0 +1,76 @@
+{
+  "domain": "suporte_tecnico",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "consultar_usuario",
+      "description": "Consulta um usuário por identificador ou e-mail.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "usuario_id": {"type": "integer", "minimum": 1},
+          "email": {"type": "string", "format": "email"}
+        },
+        "oneOf": [
+          {"required": ["usuario_id"]},
+          {"required": ["email"]}
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "abrir_chamado",
+      "description": "Abre um chamado de suporte para um usuário.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "usuario_id": {"type": "integer", "minimum": 1},
+          "categoria": {"type": "string", "enum": ["login", "acesso", "hardware", "software", "rede", "outro"]},
+          "descricao": {"type": "string", "minLength": 3, "maxLength": 1000},
+          "prioridade": {"type": "string", "enum": ["baixa", "media", "alta", "critica"]}
+        },
+        "required": ["usuario_id", "categoria", "descricao", "prioridade"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "consultar_chamado",
+      "description": "Consulta um chamado existente.",
+      "parameters": {
+        "type": "object",
+        "properties": {"chamado_id": {"type": "integer", "minimum": 1}},
+        "required": ["chamado_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "alterar_status_chamado",
+      "description": "Altera o status de um chamado.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "chamado_id": {"type": "integer", "minimum": 1},
+          "status": {"type": "string", "enum": ["aberto", "em_andamento", "pendente", "resolvido", "fechado"]}
+        },
+        "required": ["chamado_id", "status"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "listar_permissoes_usuario",
+      "description": "Lista as permissões de um usuário por identificador ou e-mail.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "usuario_id": {"type": "integer", "minimum": 1},
+          "email": {"type": "string", "format": "email"}
+        },
+        "oneOf": [
+          {"required": ["usuario_id"]},
+          {"required": ["email"]}
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

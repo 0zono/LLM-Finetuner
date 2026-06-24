@@ -1,0 +1,39 @@
+[
+  {
+    "text": "Procure livros da autora Clarice Lispector.",
+    "tool": "buscar_livro",
+    "arguments": {"consulta": "Clarice Lispector"}
+  },
+  {
+    "text": "O livro de ISBN 978-8535914849 está disponível?",
+    "tool": "consultar_disponibilidade",
+    "arguments": {"isbn": "978-8535914849"}
+  },
+  {
+    "text": "Reserve o ISBN 978-8535914849 para o usuário 42.",
+    "tool": "reservar_livro",
+    "arguments": {"usuario_id": 42, "isbn": "978-8535914849"}
+  },
+  {
+    "text": "Renove o empréstimo 731 do usuário 42.",
+    "tool": "renovar_emprestimo",
+    "arguments": {"usuario_id": 42, "emprestimo_id": 731}
+  },
+  {
+    "text": "Liste os empréstimos do usuário 42.",
+    "tool": "listar_emprestimos",
+    "arguments": {"usuario_id": 42}
+  },
+  {
+    "text": "Obrigado pela ajuda com os livros.",
+    "output": "Disponha! Se precisar de outra informação sobre a biblioteca, estou à disposição."
+  },
+  {
+    "text": "Qual é o horário de funcionamento da biblioteca?",
+    "output": "Não tenho acesso ao horário de funcionamento nas ferramentas disponíveis."
+  },
+  {
+    "text": "Reserve esse livro para mim.",
+    "output": "Informe o ISBN do livro e o identificador do usuário para realizar a reserva."
+  }
+]

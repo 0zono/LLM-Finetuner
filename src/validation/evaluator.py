@@ -7,11 +7,14 @@ from pathlib import Path
 from typing import Any
 
 from src.core.models import CanonicalRecord, RecordStatus, TaskType
+from src.core.tool_registry import ToolRegistry
 from src.validation.schema_validator import validate_records
 
 
 def evaluate_validator(
-    valid_records: list[CanonicalRecord], report_path: str | Path
+    valid_records: list[CanonicalRecord],
+    report_path: str | Path,
+    tool_registry: ToolRegistry | None = None,
 ) -> dict[str, Any]:
     corpus: list[tuple[CanonicalRecord, bool, str]] = []
     for original in valid_records:
@@ -27,7 +30,7 @@ def evaluate_validator(
     for record, expected_valid, category in corpus:
         record.status = RecordStatus.ACTIVE
         record.errors = []
-        valid, invalid = validate_records([record])
+        valid, invalid = validate_records([record], tool_registry)
         predicted_valid = bool(valid)
         if expected_valid and predicted_valid:
             tp += 1
@@ -76,7 +79,7 @@ def inject_tool_defects(
             "role": "assistant",
             "content": None,
             "tool_calls": [
-                {"name": "consultar_chamado", "arguments": {"chamado_id": 1}}
+                {"name": "__unexpected_tool__", "arguments": {}}
             ],
         }
         mutations.append((unexpected, False, "unexpected_tool_call"))

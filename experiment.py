@@ -34,8 +34,8 @@ def main() -> int:
 
     for name, overrides in ABLATIONS.items():
         config = base.model_copy(update=overrides, deep=True)
-        config.output_dir = f"data/output/ablation/{name}"
-        config.reports_dir = f"reports/ablation/{name}"
+        config.output_dir = f"data/output/ablation/{base.domain}/{name}"
+        config.reports_dir = f"reports/ablation/{base.domain}/{name}"
         result = PipelineOrchestrator(config).run()
         evaluation = result.get("evaluation") or {}
         rows.append(
