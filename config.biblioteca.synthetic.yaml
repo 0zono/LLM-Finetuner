@@ -1,0 +1,33 @@
+task_type: tool_calling
+domain: biblioteca
+tools_file: domains/biblioteca/tools.json
+seed_path: data/seeds/biblioteca_experimento.json
+
+output_dir: data/output/biblioteca/synthetic
+reports_dir: reports/biblioteca/synthetic
+
+enable_generation: true
+variations_per_seed: 3
+enable_curation: true
+curation_mode: heuristic
+minimum_curation_score: 0.7
+enable_evaluation: true
+
+system_prompt: >-
+  Você é um assistente de biblioteca. Use as ferramentas fornecidas somente
+  quando a solicitação exigir uma operação no sistema da biblioteca.
+
+splits:
+  train: 0.7
+  validation: 0.15
+  test: 0.15
+  seed: 42
+
+llm:
+  enabled: true
+  base_url: http://localhost:1234/v1
+  model: qwen/qwen3-14b@q4_k_m
+  temperature: 0.2
+  timeout_seconds: 999
+  max_retries: 3
+  cache_dir: .cache/llm
